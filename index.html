@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Locker Control</title>
+    <style>
+      /* General body styling with animated gradient background */
+      body {
+        font-family: "Poppins", sans-serif; /* Using a modern Google Font */
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+        background-size: 400% 400%;
+        animation: gradientAnimation 8s ease infinite; /* Animated gradient */
+        color: #333;
+      }
+
+      /* Passcode container styling */
+      .passcode-container {
+        text-align: center;
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px solid #dddddd;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+        width: 400px;
+        animation: slideIn 1s ease-out;
+      }
+
+      /* Input box styling */
+      #passcode {
+        font-size: 18px;
+        padding: 10px 15px;
+        border: 2px solid #dddddd;
+        border-radius: 5px;
+        width: 80%;
+        margin-bottom: 20px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      #passcode:focus {
+        border-color: #3498db;
+        outline: none;
+        box-shadow: 0px 4px 10px rgba(52, 152, 219, 0.4);
+      }
+
+      /* Submit button styling */
+      .passcode-container button {
+        font-size: 18px;
+        font-weight: bold;
+        padding: 10px 25px;
+        border: none;
+        border-radius: 50px;
+        background-color: #28a745;
+        color: white;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      .passcode-container button:hover {
+        background-color: #218838;
+        transform: scale(1.1);
+        box-shadow: 0 4px 15px rgba(33, 136, 56, 0.6);
+      }
+
+      /* Main container */
+      .container {
+        text-align: center;
+        background: rgba(255, 255, 255, 0.8); /* Slight transparency */
+        border: 2px solid #dddddd;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* Elevated shadow effect */
+        width: 400px;
+        animation: slideIn 1s ease-out; /* Slide-in animation */
+        display: none; /* Initially hidden, shown after correct passcode */
+      }
+
+      /* Header styling */
+      h1 {
+        color: #222;
+        font-size: 2rem;
+        margin-bottom: 20px;
+        animation: bounceIn 1s ease-out; /* Bounce effect */
+      }
+
+      /* Paragraph styling */
+      p {
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 20px;
+      }
+
+      /* Button styling */
+      .btn {
+        font-size: 18px;
+        font-weight: bold;
+        padding: 12px 25px;
+        margin: 10px;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Unlock button styling with glow effect */
+      .unlock-btn {
+        background-color: #28a745;
+        color: white;
+        box-shadow: 0 0 15px #28a745;
+      }
+
+      .unlock-btn:hover {
+        background-color: #218838;
+        transform: scale(1.1);
+        box-shadow: 0 0 25px #218838;
+      }
+
+      /* Lock button styling with glow effect */
+      .lock-btn {
+        background-color: #dc3545;
+        color: white;
+        box-shadow: 0 0 15px #dc3545;
+      }
+
+      .lock-btn:hover {
+        background-color: #c82333;
+        transform: scale(1.1);
+        box-shadow: 0 0 25px #c82333;
+      }
+
+      /* Loader animation */
+      .loader {
+        border: 5px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 5px solid #3498db;
+        width: 40px;
+        height: 40px;
+        animation: spin 2s linear infinite;
+        display: inline-block;
+        margin-top: 20px;
+      }
+
+      /* Feedback section */
+      .feedback {
+        margin-top: 20px;
+        font-size: 1.2rem;
+        color: #333;
+      }
+
+      /* Footer styling */
+      .footer {
+        margin-top: 20px;
+        font-size: 0.8rem;
+        color: #666;
+        text-align: center;
+      }
+
+      .footer strong {
+        color: #dc3545;
+        font-weight: bold;
+      }
+
+      /* Keyframes for animations */
+      @keyframes gradientAnimation {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes bounceIn {
+        0% {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        60% {
+          transform: scale(1.2);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Passcode Input -->
+    <div class="passcode-container">
+      <h1>Enter Passcode</h1>
+      <input type="password" id="passcode" placeholder="Enter passcode" />
+      <button onclick="checkPasscode()">Submit</button>
+      <p id="error" style="color: red; display: none">
+        Incorrect passcode. Try again.
+      </p>
+      <p id="attempts-left">You have 3 attempts remaining.</p>
+    </div>
+
+    <!-- Main Locker Control -->
+    <div class="container">
+      <h1>Smart Locker Control</h1>
+      <p>Control your locker securely with a modern web interface.</p>
+
+      <form action="/control" method="POST" onsubmit="showLoader()">
+        <button
+          type="submit"
+          name="action"
+          value="Unlock"
+          class="btn unlock-btn"
+        >
+          Unlock Locker
+        </button>
+        <button type="submit" name="action" value="Lock" class="btn lock-btn">
+          Lock Locker
+        </button>
+      </form>
+
+      <!-- Loader (hidden by default) -->
+      <div id="loader" class="loader" style="display: none"></div>
+
+      <!-- Feedback Section -->
+      <div class="feedback" id="feedback">Status: Waiting for action...</div>
+    </div>
+
+    <!-- Footer Section -->
+    <div class="footer">
+      © 2024 <strong>Ranyas</strong>. All rights reserved.
+    </div>
+
+    <script>
+      // Initialize the number of remaining attempts
+      let attemptsRemaining = 3;
+
+      // Function to check passcode
+      function checkPasscode() {
+        const passcode = document.getElementById("passcode").value;
+        const correctPasscode = "2416"; // Change this to your desired passcode
+
+        if (passcode === correctPasscode) {
+          document.querySelector(".container").style.display = "block";
+          document.querySelector(".passcode-container").style.display = "none";
+        } else {
+          // Decrease remaining attempts
+          attemptsRemaining--;
+
+          // Show error message
+          document.getElementById("error").style.display = "block";
+
+          // Clear the input field
+          document.getElementById("passcode").value = "";
+
+          // Update remaining attempts message
+          document.getElementById(
+            "attempts-left"
+          ).innerText = `You have ${attemptsRemaining} attempts remaining.`;
+
+          // If no attempts left, kill the website
+          if (attemptsRemaining <= 0) {
+            alert("Too many incorrect attempts. Exiting...");
+            window.close(); // Close the tab if supported
+          }
+        }
+      }
+
+      // Function to show loader
+      function showLoader() {
+        document.getElementById("loader").style.display = "inline-block";
+        document.getElementById("feedback").innerText =
+          "Processing your request...";
+      }
+    </script>
+  </body>
+</html>
